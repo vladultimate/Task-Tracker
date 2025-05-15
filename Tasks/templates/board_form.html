@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Створити задачу</title>
+</head>
+<body>
+    <h2>Створити нову задачу</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">💾 Зберегти</button>
+    </form>
+    <a href="{% url 'board_list' %}">⬅ Назад</a>
+</body>
+</html>

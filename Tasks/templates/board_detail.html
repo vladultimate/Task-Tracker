@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ board.name }}</title>
+</head>
+<body>
+    <h2>{{ board.name }}</h2>
+    <p><strong>Опис:</strong> {{ board.description }}</p>
+    <p><strong>Пріоритет:</strong> {{ board.priority }}</p>
+    <p><strong>Стан:</strong> {{ board.state }}</p>
+    <p><strong>Дедлайн:</strong> {{ board.deadline }}</p>
+    <p><strong>Автор:</strong> {{ board.author.username }}</p>
+    <a href="{% url 'board_list' %}">⬅ Назад до списку</a>
+</body>
+</html>

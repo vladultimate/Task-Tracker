@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Список задач</title>
+</head>
+<body>
+    <h2>Список задач</h2>
+    <a href="{% url 'board_create' %}">➕ Створити нову задачу</a>
+    <ul>
+        {% for board in boards %}
+            <li>
+                <a href="{% url 'board_detail' board.pk %}">{{ board.name }}</a>
+                — {{ board.priority }} — {{ board.state }}
+            </li>
+        {% empty %}
+            <li>Немає задач</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
