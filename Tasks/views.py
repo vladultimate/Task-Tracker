@@ -33,3 +33,8 @@ class BoardEditView(UpdateView):
     form_class = BoardForm
     template_name = 'board_form.html'  
     success_url = reverse_lazy('board_list')
+
+class BoardDeleteView(DeleteView):
+    model = Board
+    template_name = 'board_confirm_delete.html'
+    success_url = reverse_lazy('board_list')
