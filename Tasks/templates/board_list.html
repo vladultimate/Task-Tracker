@@ -1,20 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
+    <meta charset="UTF-8">
     <title>Список задач</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .column-header svg {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            fill: #6f42c1; 
+        }
+        .card.position-relative {
+            overflow: visible;
+        }
+        .task-actions {
+            display: none;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            gap: 5px;
+            z-index: 10;
+        }
+        .card:hover .task-actions {
+            display: flex;
+        }
+    </style>
 </head>
-<body>
-    <h2>Список задач</h2>
-    <a href="{% url 'board_create' %}">➕ Створити нову задачу</a>
-    <ul>
-        {% for board in boards %}
-            <li>
-                <a href="{% url 'board_detail' board.pk %}">{{ board.name }}</a>
-                — {{ board.priority }} — {{ board.state }}
-            </li>
-        {% empty %}
-            <li>Немає задач</li>
-        {% endfor %}
-    </ul>
+<body class="bg-light text-dark">
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 d-flex justify-content-center align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#6f42c1" class="me-2" viewBox="0 0 16 16">
+                <path d="M4 0a2 2 0 0 0-2 2v1h12V2a2 2 0 0 0-2-2H4zm10 4H2v9a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4zM2 3v1h12V3H2z"/>
+            </svg>
+            Список задач
+        </h1>
+        <a href="{% url 'board_create' %}" class="btn btn-primary mt-3 icon-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+                <path d="M8 4a.5.5 0 0 1 .5.5V7h2.5a.5.5 0 0 1 0 1H8.5v2.5a.5.5 0 0 1-1 0V8H5a.5.5 0 0 1 0-1h2.5V4.5A.5.5 0 0 1 8 4z"/>
+            </svg>
+            Створити нову задачу
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="border rounded p-3 h-100 bg-white shadow-sm">
+                <div class="d-flex align-items-center mb-3 fw-semibold fs-5">
+                    To Do
+                </div>
+                {% for board in boards %}
+                    {% if board.state == 'not_started' %}
+                        <div class="card mb-3 position-relative">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{% url 'board_detail' board.pk %}" class="text-decoration-none text-primary">{{ board.name }}</a>
+                                </h5>
+                                <p class="card-text">Пріоритет: {{ board.priority }}</p>
+                                <div class="task-actions">
+                                    <a href="{% url 'board_edit' board.pk %}" class="btn btn-sm btn-outline-warning" title="Редагувати">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                          <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-9.793 9.793-3.039.805a.25.25 0 0 1-.316-.316l.805-3.038 9.793-9.793zM11.207 2L3 10.207V11h.793L13 3.793 11.207 2z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="{% url 'board_delete' board.pk %}" class="btn btn-sm btn-outline-danger" title="Видалити">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                          <path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7H6v7a.5.5 0 0 1-1 0v-7z"/>
+                                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1h-1v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4H3a1 1 0 0 1-1-1V2h12v1z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="border rounded p-3 h-100 bg-white shadow-sm">
+                <div class="d-flex align-items-center mb-3 fw-semibold fs-5">
+                    In Progress
+                </div>
+                {% for board in boards %}
+                    {% if board.state == 'in_progress' %}
+                        <div class="card mb-3 position-relative">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{% url 'board_detail' board.pk %}" class="text-decoration-none text-primary">{{ board.name }}</a>
+                                </h5>
+                                <p class="card-text">Пріоритет: {{ board.priority }}</p>
+                                <div class="task-actions">
+                                    <a href="{% url 'board_edit' board.pk %}" class="btn btn-sm btn-outline-warning" title="Редагувати">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                          <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-9.793 9.793-3.039.805a.25.25 0 0 1-.316-.316l.805-3.038 9.793-9.793zM11.207 2L3 10.207V11h.793L13 3.793 11.207 2z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="{% url 'board_delete' board.pk %}" class="btn btn-sm btn-outline-danger" title="Видалити">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                          <path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7H6v7a.5.5 0 0 1-1 0v-7z"/>
+                                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1h-1v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4H3a1 1 0 0 1-1-1V2h12v1z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="border rounded p-3 h-100 bg-white shadow-sm">
+                <div class="d-flex align-items-center mb-3 fw-semibold fs-5">
+                    Done
+                </div>
+                {% for board in boards %}
+                    {% if board.state == 'completed' %}
+                        <div class="card mb-3 position-relative">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{% url 'board_detail' board.pk %}" class="text-decoration-none text-primary">{{ board.name }}</a>
+                                </h5>
+                                <p class="card-text">Пріоритет: {{ board.priority }}</p>
+                                <div class="task-actions">
+                                    <a href="{% url 'board_edit' board.pk %}" class="btn btn-sm btn-outline-warning" title="Редагувати">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                          <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-9.793 9.793-3.039.805a.25.25 0 0 1-.316-.316l.805-3.038 9.793-9.793zM11.207 2L3 10.207V11h.793L13 3.793 11.207 2z"/>
+                                        </svg>
+                                    </a>
+                                    <a href="{% url 'board_delete' board.pk %}" class="btn btn-sm btn-outline-danger" title="Видалити">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                          <path d="M5.5 5.5A.5.5 0 0 1 6 5h4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7H6v7a.5.5 0 0 1-1 0v-7z"/>
+                                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1h-1v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4H3a1 1 0 0 1-1-1V2h12v1z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% if not boards %}
+        <p class="text-center mt-5">Немає задач</p>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

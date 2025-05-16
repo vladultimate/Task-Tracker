@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .models import Board
@@ -27,3 +27,9 @@ class BoardCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user 
         return super().form_valid(form)
+
+class BoardEditView(UpdateView):
+    model = Board
+    form_class = BoardForm
+    template_name = 'board_form.html'  
+    success_url = reverse_lazy('board_list')
