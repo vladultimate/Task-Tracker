@@ -29,7 +29,7 @@ class Board(models.Model):
     deadline = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    author = models.CharField(max_length=150)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Comment(models.Model):
