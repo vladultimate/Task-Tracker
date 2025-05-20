@@ -20,3 +20,13 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )
+
+
+
+class FilterForm(forms.Form):
+    PRIORITY_CHOICES = [
+    ('', 'Усі'),
+    ('low', 'Низький'),
+    ('medium', 'Середній'),
+    ('high', 'Високий')]
+    priority = forms.ChoiceField(choices=PRIORITY_CHOICES, required=False, label='Пріоритет')
