@@ -4,79 +4,41 @@
     <meta charset="UTF-8">
     <title>{{ board.name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: rgb(99, 11, 155);
-            color: white;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
-            opacity: 0.1;
-            z-index: 0;
-        }
-
-        .card-custom {
-            background-color: #15151e;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-            z-index: 1;
-        }
-
-        a.back-link {
-            color: #f6ad55;
-            text-decoration: none;
-        }
-
-        a.back-link:hover {
-            text-decoration: underline;
-        }
-
-        .highlight {
-            color: #f6ad55;
-        }
-    </style>
 </head>
-<body>
-    <div class="stars"></div>
+<body class="bg-light text-dark">
 
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card card-custom">
-                    <h2 class="text-center mb-4">{{ board.name }}</h2>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">{{ board.name }}</h2>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item bg-transparent text-white">
-                            <strong class="highlight">Опис:</strong> {{ board.description }}
+                        <li class="list-group-item">
+                            <strong>Опис:</strong> {{ board.description }}
                         </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <strong class="highlight">Пріоритет:</strong> {{ board.priority }}
+                        <li class="list-group-item">
+                            <strong>Пріоритет:</strong> {{ board.priority }}
                         </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <strong class="highlight">Стан:</strong> {{ board.state }}
+                        <li class="list-group-item">
+                            <strong>Стан:</strong> {{ board.state }}
                         </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <strong class="highlight">Дедлайн:</strong> {{ board.deadline }}
+                        <li class="list-group-item">
+                            <strong>Дедлайн:</strong> {{ board.deadline }}
                         </li>
-                        <li class="list-group-item bg-transparent text-white">
-                            <strong class="highlight">Автор:</strong> {{ board.author.username }}
+                        <li class="list-group-item">
+                            <strong>Автор:</strong> {{ board.author.username }}
                         </li>
                     </ul>
                     <div class="mt-4 text-center">
-                        <a href="{% url 'board_list' %}" class="back-link">⬅ Назад до списку</a>
+                        <a href="{% url 'board_list' %}" class="btn btn-outline-primary">Назад до списку</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
