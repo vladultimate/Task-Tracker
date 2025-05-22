@@ -5,11 +5,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from .models import Board
-from .forms import BoardForm, LoginForm
-
-# Create your views here.
-from .forms import FilterForm
-from django.views.generic import ListView
+from .forms import BoardForm, LoginForm, FilterForm
+from .mixins import UserIsOwnerMixin
 
 class BoardListView(LoginRequiredMixin, ListView):
     model = Board
@@ -46,13 +43,13 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user 
         return super().form_valid(form)
 
-class BoardEditView(LoginRequiredMixin, UpdateView):
+class BoardEditView(LoginRequiredMixin, UserIsOwnerMixin, UpdateView):
     model = Board
     form_class = BoardForm
     template_name = 'board_form.html'  
     success_url = reverse_lazy('board_list')
 
-class BoardDeleteView(LoginRequiredMixin, DeleteView):
+class BoardDeleteView(LoginRequiredMixin, UserIsOwnerMixin, DeleteView):
     model = Board
     template_name = 'board_confirm_delete.html'
     success_url = reverse_lazy('board_list')
