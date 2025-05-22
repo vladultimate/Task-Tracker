@@ -78,6 +78,12 @@
                     {% endif %}
                 {% endfor %}
             </div>
+            <form method="get" class="mb-4 d-flex gap-2 justify-content-center">
+    {{ filter_form.priority.label_tag }}
+    {{ filter_form.priority }}
+
+    <button type="submit" class="btn btn-primary">Фільтрувати</button>
+</form>
         </div>
 
         <div class="col-md-4">

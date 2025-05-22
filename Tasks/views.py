@@ -8,11 +8,27 @@ from .models import Board
 from .forms import BoardForm, LoginForm
 
 # Create your views here.
+from .forms import FilterForm
+from django.views.generic import ListView
+
 class BoardListView(LoginRequiredMixin, ListView):
     model = Board
     template_name = 'board_list.html'
     context_object_name = 'boards'
 
+    def get_queryset(self):
+        queryset = Board.objects.all().order_by('-priority')
+        self.form = FilterForm(self.request.GET or None)
+        if self.form.is_valid():
+            priority = self.form.cleaned_data.get('priority')
+            if priority:
+                queryset = queryset.filter(priority=priority)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter_form'] = self.form
+        return context
 
 class BoardDetailView(LoginRequiredMixin, DetailView):
     model = Board
