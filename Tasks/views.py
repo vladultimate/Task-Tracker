@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from .models import Board
-from .forms import BoardForm, LoginForm, FilterForm
+from .forms import BoardForm, LoginForm, FilterForm, BoardEditingForm
 from .mixins import UserIsOwnerMixin
 
 class BoardListView(LoginRequiredMixin, ListView):
@@ -45,7 +45,7 @@ class BoardCreateView(LoginRequiredMixin, CreateView):
 
 class BoardEditView(LoginRequiredMixin, UserIsOwnerMixin, UpdateView):
     model = Board
-    form_class = BoardForm
+    form_class = BoardEditingForm
     template_name = 'board_form.html'  
     success_url = reverse_lazy('board_list')
 

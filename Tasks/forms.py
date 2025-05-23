@@ -12,6 +12,20 @@ class BoardForm(forms.ModelForm):
             'deadline': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
+
+class BoardEditingForm(forms.ModelForm):
+    class Meta:
+        model = Board
+        fields = ['name', 'description', 'priority', 'state', 'deadline']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'priority': forms.Select(attrs={'class': 'form-select'}),
+            'state': forms.Select(attrs={'class': 'form-select'}),
+            'deadline': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+
+
 class LoginForm(forms.Form):
     username = forms.CharField(
         max_length=100,
