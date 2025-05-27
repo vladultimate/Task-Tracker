@@ -1,5 +1,5 @@
 from django import forms
-from .models import Board
+from .models import Board, Comment
 
 class BoardForm(forms.ModelForm):
     class Meta:
@@ -23,6 +23,14 @@ class BoardEditingForm(forms.ModelForm):
             'priority': forms.Select(attrs={'class': 'form-select'}),
             'state': forms.Select(attrs={'class': 'form-select'}),
             'deadline': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        }
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Напишіть коментар...'}),
         }
 
 
