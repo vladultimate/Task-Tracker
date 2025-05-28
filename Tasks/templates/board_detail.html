@@ -30,6 +30,43 @@
                             <strong>Автор:</strong> {{ board.author.username }}
                         </li>
                     </ul>
+                    <div class="mt-4">
+    <h4>Коментарі:</h4>
+    {% for comment in board.comment_set.all %}
+        <div class="card my-2">
+            <div class="card-body">
+                <p>{{ comment.text }}</p>
+                <small class="text-muted">{{ comment.date }}</small>
+                <div class="mt-2">
+                    <form method="post" action="{% url 'comment_like' comment.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-success">👍 {{ comment.likes }}</button>
+                    </form>
+                    <form method="post" action="{% url 'comment_dislike' comment.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-danger">👎 {{ comment.dislikes }}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>Немає коментарів.</p>
+    {% endfor %}
+</div>
+
+<!-- Форма додавання коментаря -->
+<div class="mt-4">
+    <h4>Додати коментар:</h4>
+    <form method="post" action="{% url 'add_comment' board.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Надіслати</button>
+    </form>
+</div>
+
+<div class="mt-4 text-center">
+    <a href="{% url 'board_list' %}" class="btn btn-outline-primary">Назад до списку</a>
+</div>
                     <div class="mt-4 text-center">
                         <a href="{% url 'board_list' %}" class="btn btn-outline-primary">Назад до списку</a>
                     </div>
@@ -42,3 +79,4 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+ 

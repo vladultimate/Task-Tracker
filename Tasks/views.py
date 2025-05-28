@@ -1,11 +1,11 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, TemplateView
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView, TemplateView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
-from .models import Board
-from .forms import BoardForm, LoginForm, FilterForm, BoardEditingForm
+from .models import Board, Comment
+from .forms import BoardForm, LoginForm, FilterForm, BoardEditingForm, CommentForm
 from .mixins import UserIsOwnerMixin
 
 class BoardListView(LoginRequiredMixin, ListView):
@@ -32,7 +32,10 @@ class BoardDetailView(LoginRequiredMixin, DetailView):
     template_name = 'board_detail.html'
     context_object_name = 'board'
 
-
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = CommentForm()  # Додаємо форму до контексту
+        return context
 class BoardCreateView(LoginRequiredMixin, CreateView):
     model = Board
     form_class = BoardForm
@@ -78,3 +81,27 @@ class RegisterView(CreateView):
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = 'profile.html'
+
+class CommentCreateView(View):
+    def post(self, request, board_id):
+        board = get_object_or_404(Board, id=board_id)
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.board = board
+            comment.save()
+        return redirect('board_detail', pk=board.id)
+    
+class CommentLikeView(View):
+    def post(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.likes += 1
+        comment.save()
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+class CommentDislikeView(View):
+    def post(self, request, pk):
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.dislikes += 1
+        comment.save()
+        return redirect(request.META.get('HTTP_REFERER', '/'))

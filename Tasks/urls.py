@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import BoardListView, BoardDetailView, BoardCreateView, BoardEditView, BoardDeleteView, LoginView, RegisterView, ProfileView
+from .views import BoardListView, BoardDetailView, BoardCreateView, BoardEditView, BoardDeleteView, LoginView, RegisterView, ProfileView, CommentCreateView, CommentLikeView, CommentDislikeView
 from django.contrib.auth.views import LogoutView
 
 
@@ -12,5 +12,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('register/', RegisterView.as_view(), name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('profile/', ProfileView.as_view(), name='profile')
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('board/<int:board_id>/comment/add/', CommentCreateView.as_view(), name='add_comment'),
+    path('comment/<int:pk>/like/', CommentLikeView.as_view(), name='comment_like'),
+    path('comment/<int:pk>/dislike/', CommentDislikeView.as_view(), name='comment_dislike'),
 ]
