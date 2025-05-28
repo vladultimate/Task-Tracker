@@ -34,5 +34,8 @@ class Board(models.Model):
 
 class Comment(models.Model):
     board = models.ForeignKey(Board, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
+    likes = models.PositiveIntegerField(default=0)
+    dislikes = models.PositiveIntegerField(default=0)
