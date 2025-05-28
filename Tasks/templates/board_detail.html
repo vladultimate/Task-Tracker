@@ -4,69 +4,85 @@
     <meta charset="UTF-8">
     <title>{{ board.name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .reaction-btn svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+        textarea.form-control {
+            border-radius: 1rem;
+            resize: none;
+        }
+        .comment-card {
+            border-start: 4px solid #6f42c1;
+            border-radius: 0.5rem;
+        }
+    </style>
 </head>
 <body class="bg-light text-dark">
 
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card shadow">
+            <div class="card shadow-sm">
                 <div class="card-body">
                     <h2 class="card-title text-center mb-4">{{ board.name }}</h2>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Опис:</strong> {{ board.description }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Пріоритет:</strong> {{ board.priority }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Стан:</strong> {{ board.state }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Дедлайн:</strong> {{ board.deadline }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Автор:</strong> {{ board.author.username }}
-                        </li>
+                        <li class="list-group-item"><strong>Опис:</strong> {{ board.description }}</li>
+                        <li class="list-group-item"><strong>Пріоритет:</strong> {{ board.priority }}</li>
+                        <li class="list-group-item"><strong>Стан:</strong> {{ board.state }}</li>
+                        <li class="list-group-item"><strong>Дедлайн:</strong> {{ board.deadline }}</li>
+                        <li class="list-group-item"><strong>Автор:</strong> {{ board.author.username }}</li>
                     </ul>
+
+                    <!-- Коментарі -->
                     <div class="mt-4">
-    <h4>Коментарі:</h4>
-    {% for comment in board.comment_set.all %}
-        <div class="card my-2">
-            <div class="card-body">
-                <p>{{ comment.text }}</p>
-                <small class="text-muted">{{ comment.date }}</small>
-                <div class="mt-2">
-                    <form method="post" action="{% url 'comment_like' comment.id %}" class="d-inline">
-                        {% csrf_token %}
-                        <button class="btn btn-sm btn-success">👍 {{ comment.likes }}</button>
-                    </form>
-                    <form method="post" action="{% url 'comment_dislike' comment.id %}" class="d-inline">
-                        {% csrf_token %}
-                        <button class="btn btn-sm btn-danger">👎 {{ comment.dislikes }}</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    {% empty %}
-        <p>Немає коментарів.</p>
-    {% endfor %}
-</div>
+                        <h4 class="mb-3">Коментарі:</h4>
+                        {% for comment in board.comment_set.all %}
+                            <div class="card comment-card my-2 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <p class="mb-1"><strong>{{ comment.user }}</strong></p>
+                                    <p class="mb-1">{{ comment.text }}</p>
+                                    <small class="text-muted">{{ comment.date }}</small>
+                                    <div class="mt-2 d-flex gap-2">
+                                        <form method="post" action="{% url 'comment_like' comment.id %}">
+                                            {% csrf_token %}
+                                            <button class="btn btn-outline-success btn-sm reaction-btn d-flex align-items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M2 10a2 2 0 012-2h3V5a3 3 0 116 0v3h3a2 2 0 012 2v1a2 2 0 01-2 2h-3v3a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3H4a2 2 0 01-2-2v-1z"/>
+                                                </svg>
+                                                {{ comment.likes }}
+                                            </button>
+                                        </form>
+                                        <form method="post" action="{% url 'comment_dislike' comment.id %}">
+                                            {% csrf_token %}
+                                            <button class="btn btn-outline-danger btn-sm reaction-btn d-flex align-items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path d="M18 10a2 2 0 00-2-2h-3V5a2 2 0 00-2-2h-1a2 2 0 00-2 2v3H4a2 2 0 00-2 2v1a2 2 0 002 2h3v3a3 3 0 006 0v-3h3a2 2 0 002-2v-1z"/>
+                                                </svg>
+                                                {{ comment.dislikes }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">Немає коментарів.</p>
+                        {% endfor %}
+                    </div>
 
-<!-- Форма додавання коментаря -->
-<div class="mt-4">
-    <h4>Додати коментар:</h4>
-    <form method="post" action="{% url 'add_comment' board.id %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Надіслати</button>
-    </form>
-</div>
+                    <div class="mt-5">
+                        <h4 class="mb-3">Додати коментар:</h4>
+                        <form method="post" action="{% url 'add_comment' board.id %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                {{ form.as_p }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">Надіслати</button>
+                        </form>
+                    </div>
 
-<div class="mt-4 text-center">
-    <a href="{% url 'board_list' %}" class="btn btn-outline-primary">Назад до списку</a>
-</div>
                     <div class="mt-4 text-center">
                         <a href="{% url 'board_list' %}" class="btn btn-outline-primary">Назад до списку</a>
                     </div>
@@ -79,4 +95,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
- 

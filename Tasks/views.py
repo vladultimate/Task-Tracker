@@ -89,6 +89,7 @@ class CommentCreateView(View):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.board = board
+            comment.user = request.user  
             comment.save()
         return redirect('board_detail', pk=board.id)
     
