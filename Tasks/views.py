@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy, reverse
 from .models import Board, Comment
-from .forms import BoardForm, LoginForm, FilterForm, BoardEditingForm, CommentForm
+from .forms import BoardForm, LoginForm, FilterForm, BoardEditingForm, CommentForm, CustomUserCreationForm
 from .mixins import UserIsOwnerMixin, UserIsOwnerCommentMixin
 
 class BoardListView(LoginRequiredMixin, ListView):
@@ -76,7 +76,7 @@ class LoginView(FormView):
         
 class RegisterView(CreateView):
     template_name = 'register.html'
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
 
 class ProfileView(LoginRequiredMixin, TemplateView):
@@ -93,24 +93,46 @@ class CommentCreateView(View):
             comment.save()
         return redirect('board_detail', pk=board.id)
     
-class CommentLikeView(View):
+
+class CommentLikeView(LoginRequiredMixin, View):
     def post(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk)
-        comment.likes += 1
-        comment.save()
+        user = request.user
+
+        if user in comment.liked_by.all():
+            comment.liked_by.remove(user)
+        else:
+            comment.liked_by.add(user)
+            comment.disliked_by.remove(user) 
+
         return redirect(request.META.get('HTTP_REFERER', '/'))
 
-class CommentDislikeView(View):
+
+class CommentDislikeView(LoginRequiredMixin, View):
     def post(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk)
-        comment.dislikes += 1
-        comment.save()
+        user = request.user
+
+        if user in comment.disliked_by.all():
+              comment.disliked_by.remove(user)
+        else:
+            comment.disliked_by.add(user)
+            comment.liked_by.remove(user)  
+
         return redirect(request.META.get('HTTP_REFERER', '/'))
     
+
 class CommentUpdateView(LoginRequiredMixin, UserIsOwnerCommentMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     template_name = 'edit_comment.html'
+
+    def get_success_url(self):
+        return reverse('board_detail', kwargs={'pk': self.object.board.id})
+    
+class CommentDeleteView(LoginRequiredMixin, UserIsOwnerCommentMixin, DeleteView):
+    model = Comment
+    template_name = 'delete_comment.html'
 
     def get_success_url(self):
         return reverse('board_detail', kwargs={'pk': self.object.board.id})

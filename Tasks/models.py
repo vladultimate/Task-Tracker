@@ -37,5 +37,11 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     text = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
-    likes = models.PositiveIntegerField(default=0)
-    dislikes = models.PositiveIntegerField(default=0)
+    liked_by = models.ManyToManyField(User, related_name='liked_comments', blank=True)
+    disliked_by = models.ManyToManyField(User, related_name='disliked_comments', blank=True)
+
+    def like_count(self):
+        return self.liked_by.count()
+
+    def dislike_count(self):
+        return self.disliked_by.count()
