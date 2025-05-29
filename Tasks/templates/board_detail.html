@@ -15,7 +15,7 @@
             resize: none;
         }
         .comment-card {
-            border-start: 4px solid #6f42c1;
+            border: 4px solid #6f42c1;
             border-radius: 0.5rem;
         }
     </style>
@@ -42,6 +42,13 @@
                         {% for comment in board.comment_set.all %}
                             <div class="card comment-card my-2 border-0 shadow-sm">
                                 <div class="card-body">
+                                    {% if comment.user == request.user %}
+                                        <a href="{% url 'edit_comment' comment.pk %}" class="btn btn-outline-primary btn-sm icon-button" title="Редагувати">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                                <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2L2 11.207V13h1.793L14 3.793 11.207 2z"/>
+                                            </svg>
+                                        </a>
+                                    {% endif %}
                                     <p class="mb-1"><strong>{{ comment.user }}</strong></p>
                                     <p class="mb-1">{{ comment.text }}</p>
                                     <small class="text-muted">{{ comment.date }}</small>

@@ -3,10 +3,10 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from .models import Board, Comment
 from .forms import BoardForm, LoginForm, FilterForm, BoardEditingForm, CommentForm
-from .mixins import UserIsOwnerMixin
+from .mixins import UserIsOwnerMixin, UserIsOwnerCommentMixin
 
 class BoardListView(LoginRequiredMixin, ListView):
     model = Board
@@ -106,3 +106,11 @@ class CommentDislikeView(View):
         comment.dislikes += 1
         comment.save()
         return redirect(request.META.get('HTTP_REFERER', '/'))
+    
+class CommentUpdateView(LoginRequiredMixin, UserIsOwnerCommentMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'edit_comment.html'
+
+    def get_success_url(self):
+        return reverse('board_detail', kwargs={'pk': self.object.board.id})
