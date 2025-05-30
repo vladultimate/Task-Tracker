@@ -54,6 +54,13 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Введіть ваш коментар тут...'
+            }),
+        }
 
 class LoginForm(forms.Form):
     username = forms.CharField(
