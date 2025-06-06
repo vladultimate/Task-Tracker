@@ -1,6 +1,6 @@
 # 🗂TaskBoard — Django Task Management App
 
-TaskBoard is a web application built with Django that allows users to create, edit, and delete tasks, leave comments, like comments, and filter tasks by priority. It also includes user authentication and profile pages.
+TaskBoard is a web application built with Django that allows users to create, edit, and delete tasks, leave comments, like comments, and filter tasks by priority
 
 ## 🔧 Features
 
