@@ -14,7 +14,7 @@ TaskBoard is a web application built with Django that allows users to create, ed
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/taskboard.git
+   git clone https://github.com/vladultimate/Task-Tracker
    cd taskboard
    ```
 
